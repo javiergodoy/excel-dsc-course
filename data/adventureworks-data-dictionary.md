@@ -255,6 +255,28 @@ Calendar and fiscal years differ. A chart labelled "2013" means different things
 to the controller and the sales director, and saying which you used is part of
 the job.
 
+### The FactFinance dimensions
+
+`FactFinance` is served by four small dimensions that no other fact table uses.
+They matter only in Chapter 13.
+
+- **DimScenario**: `ScenarioKey`, `ScenarioName` — exactly three rows, `Actual`,
+  `Budget`, `Forecast`. Any variance analysis on `FactFinance` is a comparison
+  between two of these, and failing to filter the scenario double-counts the
+  ledger.
+- **DimAccount**: `AccountKey`, `ParentAccountKey` (a self-referencing chart of
+  accounts hierarchy), `AccountCodeAlternateKey`, `AccountDescription`,
+  `AccountType` (Revenue, Expenditures, Assets, Liabilities, Balances),
+  `Operator` (`+` or `~`), `CustomMembers`. The `Operator` column is how the
+  hierarchy signs its children; ignoring it inverts expense lines.
+- **DimDepartmentGroup**: `DepartmentGroupKey`, `ParentDepartmentGroupKey`,
+  `DepartmentGroupName` — Corporate, Executive General and Administration,
+  Inventory Management, Manufacturing, Quality Assurance, Research and
+  Development, Sales and Marketing.
+- **DimOrganization**: `OrganizationKey`, `ParentOrganizationKey`,
+  `CurrencyKey`, `OrganizationName` — the legal-entity structure used for
+  consolidation.
+
 ### DimReseller
 
 `ResellerKey`, `ResellerAlternateKey`, `GeographyKey`, `BusinessType`
