@@ -595,7 +595,7 @@ estimate, and the dominant assumption is almost always the target attach rate
 rather than the margin per accessory line — which the sensitivity table makes
 visible rather than asserted. The discipline that matters most here is
 symmetry: the reseller option must get a genuine three-year ramp, hiring cost
-and territory productivity assumption, not a placeholder number that loses by
+and territory productivity assumption, not a token figure that loses by
 construction. If your recommendation only wins because the alternatives were
 sized carelessly, you have not done the analysis, you have decorated a prior.
 

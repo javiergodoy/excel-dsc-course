@@ -254,6 +254,15 @@ thresholds on the page.
 Sparklines (Insert → Sparklines) put a trend in a single cell, which is exactly
 what a KPI table wants: the number, the comparison, and the shape, in one row.
 
+One formula worth keeping for conditional-format rules: drive the rule from a
+helper cell rather than from a formula typed into the rule dialog, where nobody
+will ever find it.
+
+`=AND($D5<>"", $D5<$C5*0.95)`
+
+flags a territory running more than 5% below plan, and sits visibly on the
+sheet where a reviewer can read the threshold.
+
 ### KPI tiles need a comparison and a trend
 
 A tile that says `$29.4M` is nearly useless. The reader's immediate question is
@@ -353,6 +362,21 @@ comparison line:
 
 and a sparkline over the twelve monthly revenue cells on `PivotData`.
 
+Two more tile formulas you will reuse. The prior-year comparison, computed in
+the sheet rather than in the model when the model has no date table:
+
+`=IFERROR(C2/GETPIVOTDATA("Revenue", PivotData!$A$3, "CalendarYear", $C$1-1)-1, "n/a")`
+
+and a defensive wrapper so a sliced-to-empty selection shows a dash instead of
+`#DIV/0!`, which on a client screen reads as a broken dashboard:
+
+`=IF([Revenue]=0, "—", TEXT([Margin]/[Revenue], "0.0%"))`
+
+The dynamic subtitle that records the active filter, so a printed page is always
+identifiable:
+
+`=TEXTJOIN(" · ", TRUE, "AdventureWorks", $C$1, "Territory: " & $D$1, "Source: FactInternetSales + FactResellerSales")`
+
 Format the tiles as cells with a light fill and a thin border, not as text
 boxes. Cells align to the grid; floating text boxes do not, and they drift every
 time someone inserts a row.
@@ -364,6 +388,15 @@ sequence: delete the border, delete the fill, keep very light gridlines (a
 twelve-point monthly series does need them), delete the legend, label the final
 point of each year's line directly, and set the y-axis to start at zero — this
 is revenue, a magnitude, and the reader will compare heights.
+
+Drive the series range from a formula so the chart never plots the partial
+month by accident. Define a name `TrendMonths` as
+
+`=OFFSET(PivotData!$B$4, 0, 0, COUNT(PivotData!$B:$B)-1, 1)`
+
+and point the series at it — accepting, as the performance note above warns,
+that `OFFSET` is volatile, so on a heavy model prefer a static range trimmed in
+Power Query instead.
 
 Handle the truncated final month explicitly: either stop the series at the last
 complete month, or plot the partial point as a hollow marker on a dashed segment
