@@ -54,7 +54,13 @@ Getting that second column right is where the calculated-field trap bites.
 
 ## Data you will use
 
-The combined `Sales` table from Chapter 4, or the two fact tables separately:
+The two fact tables, `FactInternetSales` and `FactResellerSales`, each enriched
+with the lookup columns you added in Chapter 4. A pivot can only read one table
+at a time, so until you build the single appended `Sales` table in Chapter 7 you
+will pivot each channel separately and combine the two summaries by hand. That
+friction is the argument for Chapter 7, and feeling it here is the point.
+
+Columns used:
 
 - `SalesAmount` — revenue.
 - `TotalProductCost` — cost of goods.

@@ -61,6 +61,20 @@ def main():
                      "found 'SalesAmount %s %s', expected 'SalesAmount - TotalProductCost'"
                      % (m.group(1), m.group(2)))
 
+    # the appended Sales table with Channel is built in Chapter 7, not earlier.
+    # A chapter may not claim an earlier chapter delivers it.
+    for f in chapters:
+        n = int(re.match(r"ch(\d+)-", f).group(1))
+        text = open(os.path.join(BOOK, f), encoding="utf-8").read()
+        for m in re.finditer(r"combined `?Sales`? table from Chapter (\d+)", text):
+            if int(m.group(1)) < 7:
+                fail("book/" + f, "attributes the appended Sales table to a chapter that "
+                                  "does not build it",
+                     "claims Chapter %s; the append is built in Chapter 7" % m.group(1))
+        if n < 7 and re.search(r"Sales\[Channel\]", text):
+            fail("book/" + f, "uses Sales[Channel] before Chapter 7 creates it",
+                 "Channel column originates in the Chapter 7 append")
+
     if len(titles) != len(chapters):
         fail("book/", "some chapters have an unparseable H1",
              "%d titles parsed from %d chapters" % (len(titles), len(chapters)))
